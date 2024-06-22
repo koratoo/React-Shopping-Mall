@@ -23,7 +23,7 @@ function App() {
   const [explanation, setExplanation] = useState("");
   const [price, setPrice] = useState(0);
 
-  const fakeId = useRef(1); // 초기값을 1로 변경합니다.
+  const fakeId = useRef(0); // 초기값을 1로 변경합니다.
 
   const handleCreate = (newProduct: Omit<ProductType, "id">) => {
     fakeId.current += 1;
@@ -69,15 +69,25 @@ function App() {
       </form>
 
       <div className="product-list">
-        {products.map((product) => (
-          <div key={product.id} className="product-item">
-            <div className="product-id">ID: {product.id}</div>
-            <div className="product-name">이름: {product.name}</div>
-            <div className="product-price">가격: {product.price}원</div>
-            <div className="product-explanation">설명: {product.explanation}</div>
+        {products.map(({id, name, price, explanation}) => (
+          <div key={id} className="product-item">
+            <div className="product-id">ID: {id}</div>
+            <div className="product-name">이름: {name}</div>
+            <div className="product-price">가격: {price}원</div>
+            <div className="product-explanation">설명: {explanation}</div>
+            <button 
+              type="button"
+              onClick={() => {
+                setProducts(products.filter((product) => product.id !== id))
+              }}
+            >
+              삭제하기
+            </button>
           </div>
         ))}
+       
       </div>
+      
     </div>
   );
 }
