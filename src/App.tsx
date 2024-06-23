@@ -14,11 +14,11 @@ interface ProductItemProps {
   onUpdate: (product: ProductType) => void;
 }
 
-const ProductItem = ({ product, onDelete, onUpdate }: ProductItemProps) =>{
-  const {id, name, price, explanation} = product;
+const ProductItem = ({ product, onDelete, onUpdate }: ProductItemProps) => {
+  const { id, name, price, explanation } = product;
   const [isEditMode, setIsEditMode] = useState(false);
   const [editName, setEditName] = useState(product.name);
-  const [explanation, setEditExplanation] = useState(product.explanation);
+  const [editExplanation, setEditExplanation] = useState(product.explanation);
   const [editPrice, setEditPrice] = useState(product.price);
 
   return (
@@ -44,17 +44,34 @@ const ProductItem = ({ product, onDelete, onUpdate }: ProductItemProps) =>{
               id,
               name: editName,
               price: editPrice,
-              explanation: setEditExplanation,
+              explanation: editExplanation,
             });
           }}
-      >
-
-        
-      </form>
+        >
+          <input
+            type="text"
+            placeholder="상품 이름"
+            value={editName}
+            onChange={(event) => setEditName(event.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="상품 설명"
+            value={editExplanation}
+            onChange={(event) => setEditExplanation(event.target.value)}
+          />
+          <input
+            type="numbere"
+            placeholder="상품 가격"
+            value={editPrice}
+            onChange={(event) => setEditPrice(parseInt(event.target.value, 10))}
+          />
+          <input type="submit" value="상품 수정하기" />
+        </form>
+      )}
     </div>
-  )
-      
-}
+  );
+};
 
 function App() {
   const [products, setProducts] = useState<ProductType[]>([
@@ -108,7 +125,9 @@ function App() {
         />
         <input
           value={price}
-          onChange={(event) => setPrice(Number(event.target.value))}
+          onChange={(event) =>
+            setPrice(Number(parseInt(event.target.value, 10)))
+          }
           type="number"
           placeholder="상품 가격"
           className="input-field"
