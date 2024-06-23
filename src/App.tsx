@@ -96,6 +96,22 @@ function App() {
     setProducts((prevProducts) => [...prevProducts, product]);
   };
 
+  const handleDelete = (id: number) =>
+    setProducts(products.filter((product) => product.id !== id));
+
+  const handleUpdate = (updateProduct: {
+    id: number;
+    name: string;
+    explanation: string;
+    price: number;
+  }) => {
+    setProducts(
+      products.map((product) =>
+        product.id === updateProduct.id ? updateProduct : product
+      )
+    );
+  };
+
   return (
     <div className="app-container">
       <form
@@ -133,6 +149,14 @@ function App() {
           className="input-field"
         />
         <input type="submit" value="상품 만들기" className="submit-button" />
+        {products.map((product) => (
+          <ProductItem
+            key={product.id}
+            product={product}
+            onDelete={handleDelete}
+            onUpdate={handleUpdate}
+          />
+        ))}
       </form>
 
       <div className="product-list">
