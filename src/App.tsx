@@ -22,7 +22,7 @@ const ProductItem = ({ product, onDelete, onUpdate }: ProductItemProps) => {
   const [editPrice, setEditPrice] = useState(product.price);
 
   return (
-    <div>
+    <div className="product-item">
       <div>{id}</div>
       <div>{name}</div>
       <div>{price}</div>
@@ -46,6 +46,7 @@ const ProductItem = ({ product, onDelete, onUpdate }: ProductItemProps) => {
               price: editPrice,
               explanation: editExplanation,
             });
+            setIsEditMode(false); // 수정 후 폼을 닫습니다.
           }}
         >
           <input
@@ -61,7 +62,7 @@ const ProductItem = ({ product, onDelete, onUpdate }: ProductItemProps) => {
             onChange={(event) => setEditExplanation(event.target.value)}
           />
           <input
-            type="numbere"
+            type="number"
             placeholder="상품 가격"
             value={editPrice}
             onChange={(event) => setEditPrice(parseInt(event.target.value, 10))}
@@ -92,8 +93,13 @@ function App() {
 
   const handleCreate = (newProduct: Omit<ProductType, "id">) => {
     fakeId.current += 1;
-    const product = { id: fakeId.current, ...newProduct };
-    setProducts((prevProducts) => [...prevProducts, product]);
+    setProducts([
+      ...products,
+      {
+        ...newProduct,
+        id: fakeId.current,
+      },
+    ]);
   };
 
   const handleDelete = (id: number) =>
@@ -149,34 +155,15 @@ function App() {
           className="input-field"
         />
         <input type="submit" value="상품 만들기" className="submit-button" />
-        {products.map((product) => (
-          <ProductItem
-            key={product.id}
-            product={product}
-            onDelete={handleDelete}
-            onUpdate={handleUpdate}
-          />
-        ))}
       </form>
-
-      <div className="product-list">
-        {products.map(({ id, name, price, explanation }) => (
-          <div key={id} className="product-item">
-            <div className="product-id">ID: {id}</div>
-            <div className="product-name">이름: {name}</div>
-            <div className="product-price">가격: {price}원</div>
-            <div className="product-explanation">설명: {explanation}</div>
-            <button
-              type="button"
-              onClick={() => {
-                setProducts(products.filter((product) => product.id !== id));
-              }}
-            >
-              삭제하기
-            </button>
-          </div>
-        ))}
-      </div>
+      {products.map((product) => (
+        <ProductItem
+          key={product.id}
+          product={product}
+          onDelete={handleDelete}
+          onUpdate={handleUpdate}
+        />
+      ))}
     </div>
   );
 }
